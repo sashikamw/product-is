@@ -16,7 +16,7 @@
 * under the License.
 */
 
-package org.wso2.identity.integration.test;
+package org.wso2.identity.scenarios.test.scim2;
 
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;

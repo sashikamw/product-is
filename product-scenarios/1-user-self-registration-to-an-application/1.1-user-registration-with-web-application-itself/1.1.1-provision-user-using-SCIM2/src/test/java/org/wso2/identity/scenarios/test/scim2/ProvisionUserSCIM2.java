@@ -1,4 +1,4 @@
-package org.wso2.identity.integration.test.user.selfregistration;
+package org.wso2.identity.scenarios.test.scim2;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
@@ -53,7 +53,7 @@ public class ProvisionUserSCIM2 {
 
 
     @Test(description = "1.1.1.1")
-    public void TestCreateUser() throws Exception {
+    public void testSCIM2CreateUser() throws Exception {
         String scimEndpoint = getIdentityHTTPSEP() + SCIM2_USERS_ENDPOINT;
         HttpPost request = new HttpPost(scimEndpoint);
         request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
