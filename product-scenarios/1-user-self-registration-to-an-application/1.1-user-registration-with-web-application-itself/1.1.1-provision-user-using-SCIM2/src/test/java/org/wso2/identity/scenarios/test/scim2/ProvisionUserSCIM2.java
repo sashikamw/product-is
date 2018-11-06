@@ -25,7 +25,7 @@ import java.io.InputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public class ProvisionUserSCIM2 {
+public class ProvisionUserSCIM2 extends ScenarioTestBase {
 
     protected Log log = LogFactory.getLog(getClass());
     public static final String SCIM2_USERS_ENDPOINT = "/scim2/Users";
@@ -41,7 +41,7 @@ public class ProvisionUserSCIM2 {
     private static final String PASSWORD = "scim2pwd";
     private String userId;
 
-    String resourceLocation = System.getProperty("framework.resource.location");
+//    String resourceLocation = System.getProperty("framework.resource.location");
 
     private CloseableHttpClient client;
 
@@ -54,7 +54,7 @@ public class ProvisionUserSCIM2 {
 
     @Test(description = "1.1.1.1")
     public void testSCIM2CreateUser() throws Exception {
-        String scimEndpoint = getIdentityHTTPSEP() + SCIM2_USERS_ENDPOINT;
+        String scimEndpoint = getDeploymentProperties().getProperty(IS_HTTPS_URL) + SCIM2_USERS_ENDPOINT;
         HttpPost request = new HttpPost(scimEndpoint);
         request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
         request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
@@ -92,7 +92,7 @@ public class ProvisionUserSCIM2 {
     }
 
      private void testDeleteUser() throws Exception {
-        String userResourcePath = getIdentityHTTPSEP() + SCIM2_USERS_ENDPOINT + "/" + userId;
+        String userResourcePath = getDeploymentProperties().getProperty(IS_HTTPS_URL) + SCIM2_USERS_ENDPOINT + "/" + userId;
         HttpDelete request = new HttpDelete(userResourcePath);
         request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
         request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
@@ -103,7 +103,7 @@ public class ProvisionUserSCIM2 {
 
         EntityUtils.consume(response.getEntity());
 
-        userResourcePath = getIdentityHTTPSEP() + SCIM2_USERS_ENDPOINT + "/" + userId;
+        userResourcePath = getDeploymentProperties().getProperty(IS_HTTPS_URL) + SCIM2_USERS_ENDPOINT + "/" + userId;
         HttpGet getRequest = new HttpGet(userResourcePath);
         getRequest.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
         getRequest.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
@@ -114,38 +114,34 @@ public class ProvisionUserSCIM2 {
         EntityUtils.consume(response.getEntity());
     }
 
-    private String adminUsername = "admin";
-    private String adminPassword = "admin";
-    private String getAuthzHeader() {
-        return "Basic " + Base64.encodeBase64String((adminUsername + ":" + adminPassword).getBytes()).trim();
-    }
 
-    private void setKeyStoreProperties() {
+
+  /*  private void setKeyStoreProperties() {
         System.setProperty("javax.net.ssl.trustStore", resourceLocation + "keystores/products/wso2carbon.jks");
         System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
         System.setProperty("javax.net.ssl.trustStoreType", "JKS");
 
-    }
+    }*/
 
-    private String getIdentityHTTPSEP() {
-        String bucketLocation = System.getenv("DATA_BUCKET_LOCATION");
-        String url = null;
-        log.info("Data Bucket location is set : " + bucketLocation);
-
-        Properties prop = new Properties();
-        //InputStream input = null;
-        try (InputStream input = new FileInputStream(bucketLocation + "/infrastructure.properties")) {
-            prop.load(input);
-            url = prop.getProperty("ISHttpsUrl");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        if (url == null){
-            url = "https://localhost:9443";
-        }
-
-        return url;
-    }
+//    private String getIdentityHTTPSEP() {
+//        String bucketLocation = System.getenv("DATA_BUCKET_LOCATION");
+//        String url = null;
+//        log.info("Data Bucket location is set : " + bucketLocation);
+//
+//        Properties prop = new Properties();
+//        //InputStream input = null;
+//        try (InputStream input = new FileInputStream(bucketLocation + "/infrastructure.properties")) {
+//            prop.load(input);
+//            url = prop.getProperty("ISHttpsUrl");
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+//        }
+//
+//        if (url == null){
+//            url = "https://localhost:9443";
+//        }
+//
+//        return url;
+//    }
 
 }
